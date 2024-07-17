@@ -11,7 +11,10 @@ export class MoviesService {
       const movie = await this.prisma.movies_v1.create({
         data: dto,
       });
+      console.log(movie);
+      
       return { data: movie, err: null };
+      
     } catch (err) {
       return { data: null, err: err };
     }

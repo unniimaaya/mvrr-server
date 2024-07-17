@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { LanguageDto } from './dto/languages.dto';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class LanguagesService {
   // add prisma in to languageservice
   constructor(private prisma: PrismaService) {}
 
-  //   create movielanguage
+  //   create language
   async createLanguage(dto: LanguageDto) {
     try {
-      const language = await this.prisma.movie_languages_v1.create({
+      const language = await this.prisma.languages_v1.create({
         data: dto,
       });
       return { data: language, err: null };
@@ -19,10 +19,10 @@ export class LanguagesService {
       return { data: null, err: err };
     }
   }
-  //  update movielanguage
+  //  update language
   async updateLanguage(dto: LanguageDto, languageId: number) {
     try {
-      const updatelanguage = await this.prisma.movie_languages_v1.update({
+      const updatelanguage = await this.prisma.languages_v1.update({
         where: {
           language_id: languageId,
         },
@@ -36,7 +36,7 @@ export class LanguagesService {
   // get all the languages
   async getAllLanguage() {
     try {
-      const allLanguage = await this.prisma.movie_languages_v1.findMany();
+      const allLanguage = await this.prisma.languages_v1.findMany();
 // console.log(allLanguage);
 
       return { data: allLanguage, err: null };
@@ -48,7 +48,7 @@ export class LanguagesService {
 
   async getLanguage(languageId: number) {
     try {
-      const getLanguage = await this.prisma.movie_languages_v1.findFirst({
+      const getLanguage = await this.prisma.languages_v1.findFirst({
         where: {
           language_id: languageId,
         },

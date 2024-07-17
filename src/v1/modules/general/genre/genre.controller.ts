@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -12,7 +13,7 @@ import {
 import { GenreService } from './genre.service';
 import { GenreDto } from './dto/genre.dto';
 
-@Controller('genre')
+@Controller('v1/general/genre')
 export class GenreController {
   constructor(private genreservice: GenreService) {}
 
@@ -32,7 +33,7 @@ export class GenreController {
     return { data };
   }
 @Patch(':genreId')
-@HttpCode(HttpStatus.CREATED)
+@HttpCode(HttpStatus.OK)
 async updateGenre(@Body() dto:GenreDto,
 @Param('genreId',ParseIntPipe) genreId:number,){
 dto.genre_updated_at=new Date()
@@ -42,5 +43,24 @@ if(err){
     throw new HttpException("failed",HttpStatus.BAD_REQUEST)
 }
 return{data}
+}
+@Get(':genreId')
+@HttpCode(HttpStatus.OK)
+async getOneGenre(@Param('genreId',ParseIntPipe) genreId:number ){
+const {data,err}= await this.genreservice.getGenre(genreId)
+if (err) {
+  throw new HttpException('failed', HttpStatus.BAD_REQUEST);
+}
+return { data };
+}
+
+@Get('')
+@HttpCode(HttpStatus.OK)
+async getAllGenres() {
+  const { data, err } = await this.genreservice.getAllGenre();
+  if (err) {
+    throw new HttpException('failed to fetch data', HttpStatus.BAD_REQUEST);
+  }
+  return { data };
 }
 }

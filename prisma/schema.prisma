@@ -13,45 +13,45 @@ model roles_v1 {
 }
 
 model users_v1 {
-  user_id         Int      @id(map: "users_pkey") @default(autoincrement())
-  user_name       String?  @db.VarChar(50)
-  user_role_id    Int?
-  user_email      String?  @db.VarChar(100)
-  user_password   String?  @db.VarChar(100)
-  user_token      String?  @db.VarChar(255)
-  user_created_at DateTime @db.Timestamp(6)
-  user_updated_at DateTime @db.Timestamp(6)
+  user_id                                                               Int                  @id(map: "users_pkey") @default(autoincrement())
+  user_name                                                             String?              @db.VarChar(50)
+  user_role_id                                                          Int?
+  user_email                                                            String?              @db.VarChar(100)
+  user_password                                                         String?              @db.VarChar(100)
+  user_token                                                            String?              @db.VarChar(255)
+  user_created_at                                                       DateTime             @db.Timestamp(6)
+  user_updated_at                                                       DateTime             @db.Timestamp(6)
+  movie_languages_v1_movie_languages_v1_movie_lang_created_byTousers_v1 movie_languages_v1[] @relation("movie_languages_v1_movie_lang_created_byTousers_v1")
+  movie_languages_v1_movie_languages_v1_movie_lang_updated_byTousers_v1 movie_languages_v1[] @relation("movie_languages_v1_movie_lang_updated_byTousers_v1")
 }
 
 model movies_v1 {
-  movie_id           Int           @id @default(autoincrement())
-  movie_name         String?       @db.VarChar(100)
-  movie_year         DateTime?     @db.Timestamp(6)
-  movie_release_date DateTime?     @db.Timestamp(6)
+  movie_id           Int                  @id @default(autoincrement())
+  movie_name         String?              @db.VarChar(100)
+  movie_year         DateTime?            @db.Timestamp(6)
+  movie_release_date DateTime?            @db.Timestamp(6)
   movie_genre_id     Int?
   movie_language_id  Int?
   movie_overview     String?
   movie_budget       Int?
-  movie_poster       String?       @db.VarChar(255)
-  movie_created_at   DateTime      @db.Timestamp(6)
-  movie_updated_at   DateTime      @db.Timestamp(6)
+  movie_poster       String?              @db.VarChar(255)
+  movie_created_at   DateTime             @db.Timestamp(6)
+  movie_updated_at   DateTime             @db.Timestamp(6)
   movie_created_by   Int
   movie_updated_by   Int
   movie_status       status_types?
+  movie_languages_v1 movie_languages_v1[]
 }
 
 model movie_casts_v1 {
-  mc_id         Int           @id @default(autoincrement())
-  mc_name       String        @db.VarChar(50)
-  mc_age        Int
-  mc_about      String        @db.VarChar(500)
-  mc_created_at DateTime      @db.Timestamp(6)
-  mc_created_by Int
-  mc_updated_at DateTime      @db.Timestamp(6)
-  mc_updated_by Int
-  mc_status     status_types?
-  mc_website    String?       @db.VarChar(255)
-  mc_image      String?       @db.VarChar(255)
+  movie_cast_id         Int           @id(map: "movie_casts_v1_pkey1") @default(autoincrement())
+  movie_cast_cast_id    Int?
+  movie_cast_movie_id   Int?
+  movie_cast_created_at DateTime?     @db.Timestamp(6)
+  movie_cast_updated_at DateTime?     @db.Timestamp(6)
+  movie_cast_created_by Int?
+  movie_cast_updated_by Int?
+  movie_cast_status     status_types? @default(ACTIVE)
 }
 
 model movie_genre_v1 {
@@ -65,26 +65,99 @@ model movie_genre_v1 {
 }
 
 model movie_languages_v1 {
-  language_id         Int           @id(map: "languages_v1_pkey") @default(autoincrement())
-  language_name       String?       @db.VarChar(100)
-  language_created_at DateTime      @db.Timestamp(6)
-  language_updated_at DateTime      @db.Timestamp(6)
-  language_updated_by Int
-  language_created_by Int
-  language_status     status_types?
+  movie_lang_id                                               Int           @id @default(autoincrement())
+  movie_lang_lang_id                                          Int?
+  movie_lang_movie_id                                         Int?
+  movie_lang_created_at                                       DateTime?     @db.Timestamp(6)
+  movie_lang_updated_at                                       DateTime?     @db.Timestamp(6)
+  movie_lang_created_by                                       Int?
+  movie_lang_updated_by                                       Int?
+  movie_lang_status                                           status_types? @default(ACTIVE)
+  users_v1_movie_languages_v1_movie_lang_created_byTousers_v1 users_v1?     @relation("movie_languages_v1_movie_lang_created_byTousers_v1", fields: [movie_lang_created_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  languages_v1                                                languages_v1? @relation(fields: [movie_lang_lang_id], references: [language_id], onDelete: NoAction, onUpdate: NoAction)
+  movies_v1                                                   movies_v1?    @relation(fields: [movie_lang_movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction)
+  users_v1_movie_languages_v1_movie_lang_updated_byTousers_v1 users_v1?     @relation("movie_languages_v1_movie_lang_updated_byTousers_v1", fields: [movie_lang_updated_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model movie_directors_v1 {
-  md_id         Int           @id @default(autoincrement())
-  md_name       String        @db.VarChar(20)
-  md_age        Int?
-  md_about      String?       @db.VarChar(255)
-  md_image      String?       @db.VarChar(255)
-  md_created_by Int
-  md_updated_by Int
-  md_created_at DateTime      @db.Timestamp(6)
-  md_updated_at DateTime      @db.Timestamp(6)
-  md_status     status_types?
+  movie_director_id          Int           @id(map: "movie_directors_v1_pkey1") @default(autoincrement())
+  movie_director_director_id Int?
+  movie_director_movie_id    Int?
+  movie_director_created_at  DateTime?     @db.Timestamp(6)
+  movie_director_updated_at  DateTime?     @db.Timestamp(6)
+  movie_director_created_by  Int?
+  movie_director_updated_by  Int?
+  movie_director_status      status_types? @default(ACTIVE)
+}
+
+model awards_v1 {
+  award_id         Int           @id @default(autoincrement())
+  award_name       String        @db.VarChar(100)
+  award_remark     String?
+  award_created_at DateTime?     @db.Timestamp(6)
+  award_updated_at DateTime?     @db.Timestamp(6)
+  award_created_by Int?
+  award_updated_by Int?
+  award_status     status_types? @default(ACTIVE)
+}
+
+model cast_awards_v1 {
+  cast_award_id         Int           @id
+  cast_award_name       String        @db.VarChar(100)
+  cast_award_remark     String?
+  cast_award_created_at DateTime?     @db.Timestamp(6)
+  cast_award_updated_at DateTime?     @db.Timestamp(6)
+  cast_award_created_by Int?
+  cast_award_updated_by Int?
+  cast_award_status     status_types? @default(ACTIVE)
+}
+
+model casts_v1 {
+  cast_id         Int           @id(map: "movie_casts_v1_pkey") @default(autoincrement())
+  cast_name       String?       @db.VarChar(50)
+  cast_age        Int?
+  cast_about      String?       @db.VarChar(500)
+  cast_created_at DateTime      @db.Timestamp(6)
+  cast_created_by Int
+  cast_updated_at DateTime      @db.Timestamp(6)
+  cast_updated_by Int
+  cast_status     status_types?
+  cast_website    String?       @db.VarChar(255)
+  cast_image      String?       @db.VarChar(255)
+}
+
+model directors_v1 {
+  director_id         Int           @id(map: "movie_directors_v1_pkey") @default(autoincrement())
+  director_name       String        @db.VarChar(20)
+  director_age        Int?
+  director_about      String?       @db.VarChar(255)
+  director_image      String?       @db.VarChar(255)
+  director_created_by Int
+  director_updated_by Int
+  director_created_at DateTime      @db.Timestamp(6)
+  director_updated_at DateTime      @db.Timestamp(6)
+  director_status     status_types?
+}
+
+model honours_v1 {
+  honour_id         Int           @id(map: "cast_honours_v1_pkey")
+  honour_name       String?       @db.VarChar(100)
+  honour_created_by Int?
+  honour_updated_by Int?
+  honour_created_at DateTime?     @db.Timestamp(6)
+  honour_updated_at DateTime?     @db.Timestamp(6)
+  honour_status     status_types? @default(ACTIVE)
+}
+
+model languages_v1 {
+  language_id         Int                  @id @default(autoincrement())
+  language_name       String?              @db.VarChar(100)
+  language_created_at DateTime             @db.Timestamp(6)
+  language_updated_at DateTime             @db.Timestamp(6)
+  language_updated_by Int
+  language_created_by Int
+  language_status     status_types?
+  movie_languages_v1  movie_languages_v1[]
 }
 
 enum status_types {

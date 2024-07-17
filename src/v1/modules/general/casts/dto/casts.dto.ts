@@ -4,18 +4,18 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class CastsDto{
 @IsNotEmpty()
 @IsString()
-mc_name:string
+cast_name:string
 // @IsNumber()
-mc_age:number
+cast_age:number
 // @IsString()
-mc_about:string
+cast_about:string
 // @IsString()
-mc_website:string
+cast_website:string
 // @IsString()
-mc_image:string
-mc_created_at:Date
-mc_updated_at:Date
-mc_created_by:number
-mc_updated_by:number
-mc_status:status_types
+cast_image:string
+cast_created_at:Date
+cast_updated_at:Date
+cast_created_by:number
+cast_updated_by:number
+cast_status:status_types
 }
