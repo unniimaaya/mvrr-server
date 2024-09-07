@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -9,10 +10,15 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { LanguagesService } from './languages.service';
 import { LanguageDto } from './dto/languages.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { DeleteQueryParams } from 'src/common/pipes/delete-query.pipe';
 
+@UseGuards(AuthGuard('user'))
 @Controller('v1/general/language')
 export class LanguagesController {
   constructor(private languageservice: LanguagesService) {}
@@ -24,6 +30,7 @@ export class LanguagesController {
     dto.language_updated_at = new Date();
     dto.language_created_by = 1;
     dto.language_updated_by = 1;
+    dto.language_status= "ACTIVE"
     const { data, err } = await this.languageservice.createLanguage(dto);
     if (err) {
       throw new HttpException('failed', HttpStatus.BAD_REQUEST);
@@ -59,6 +66,7 @@ export class LanguagesController {
     return { data };
   }
   // api to get all language
+ 
   @Get('')
   @HttpCode(HttpStatus.OK)
   async getAllLanguage() {
@@ -68,4 +76,12 @@ export class LanguagesController {
     }
     return { data };
   }
+
+  // soft delete - status change to active to inactive
+  @Delete('')
+  @HttpCode(HttpStatus.OK)
+ async deleteLanguage(@Param('languageId',ParseIntPipe) languageId:number,
+  @Query() params:DeleteQueryParams ){
+  const  {type}= params
+ }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LanguageDto } from './dto/languages.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { status_types } from '@prisma/client';
 
 @Injectable()
 export class LanguagesService {
@@ -58,4 +59,22 @@ export class LanguagesService {
       return { data: null, err: err };
     }
   }
+
+   // soft delete - status change to active to inactive
+   async deleteLanguage(languageId:number,status:status_types){
+    try{
+     const deletedata= await this.prisma.languages_v1.update({
+      where:{
+        language_id:languageId
+      },
+      data:{
+        language_status:status
+      },
+     })
+     return {data:deletedata,err:null }
+    }
+    catch(err) {
+      return { data: null, err: err };
+    }
+   }
 }

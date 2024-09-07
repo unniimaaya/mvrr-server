@@ -7,7 +7,7 @@ export class GenreService {
   constructor(private prisma: PrismaService) {}
   async createGenre(dto: GenreDto) {
     try {
-      const creategenre = await this.prisma.movie_genre_v1.create({
+      const creategenre = await this.prisma.genre_v1.create({
         data: dto,
       });
       return { data: creategenre, err: null };
@@ -17,7 +17,7 @@ export class GenreService {
   }
   async updateGenre(dto: GenreDto, genreId: number) {
     try {
-      const updategenre = await this.prisma.movie_genre_v1.update({
+      const updategenre = await this.prisma.genre_v1.update({
         where: {
           genre_id: genreId,
         },
@@ -30,7 +30,7 @@ export class GenreService {
   }
   async getGenre(genreId: number) {
     try {
-      const getgenre = await this.prisma.movie_genre_v1.findFirst({
+      const getgenre = await this.prisma.genre_v1.findFirst({
         where: {
           genre_id: genreId,
         },
@@ -42,7 +42,7 @@ export class GenreService {
   }
   async getAllGenre() {
     try {
-      const getAllgenre = await this.prisma.movie_genre_v1.findMany();
+      const getAllgenre = await this.prisma.genre_v1.findMany();
       return { data: getAllgenre, err: null };
     } catch (err) {
       return { data: null, err: err };

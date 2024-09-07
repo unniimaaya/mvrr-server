@@ -12,9 +12,8 @@ export class MoviesService {
         data: dto,
       });
       console.log(movie);
-      
+
       return { data: movie, err: null };
-      
     } catch (err) {
       return { data: null, err: err };
     }
@@ -39,6 +38,28 @@ export class MoviesService {
         where: {
           movie_id: movieId,
         },
+        include: {
+          movie_casts_v1:{
+            select:{
+              casts_v1:{
+                select:{
+                  cast_id:true,
+                  cast_name:true
+                }
+              }
+            }
+          },
+          movie_languages_v1: {
+            select: {
+              languages_v1: {
+                select: {
+                  language_id: true,
+                  language_name: true,
+                },
+              },
+            },
+          },
+        },
       });
       return { data: getmovie, err: null };
     } catch (err) {
@@ -47,7 +68,22 @@ export class MoviesService {
   }
   async getAllmovie() {
     try {
-      const getallmovie = await this.prisma.movies_v1.findMany();
+      const getallmovie = await this.prisma.movies_v1.findMany({
+        include: {
+          movie_languages_v1: {
+            select: {
+              languages_v1: {
+                select: {
+                  language_id: true,
+                  language_name: true,
+                },
+              },
+            },
+          },
+          
+          
+        },
+      });
       return { data: getallmovie, err: null };
     } catch (err) {
       return { data: null, err: err };

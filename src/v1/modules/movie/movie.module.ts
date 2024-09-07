@@ -14,11 +14,13 @@ import { MovieCastsService } from './movie-casts/movie-casts.service';
 import { MovieCastsController } from './movie-casts/movie-casts.controller';
 import { MovieGenreController } from './movie-genre/movie-genre.controller';
 import { MovieGenreService } from './movie-genre/movie-genre.service';
+import { MovieAwardsService } from './movie-awards/movie-awards.service';
+import { MovieAwardsController } from './movie-awards/movie-awards.controller';
 
 
 
 @Module({
-  providers: [MoviesService,PrismaService, MovieLanguagesService, MovieCastsService, MovieGenreService,],
-  controllers: [MoviesController, MovieLanguagesController, MovieCastsController, MovieGenreController]
+  providers: [MoviesService,PrismaService, MovieLanguagesService, MovieCastsService, MovieGenreService, MovieAwardsService,],
+  controllers: [MoviesController, MovieLanguagesController, MovieCastsController, MovieGenreController, MovieAwardsController]
 })
 export class MovieModule {}

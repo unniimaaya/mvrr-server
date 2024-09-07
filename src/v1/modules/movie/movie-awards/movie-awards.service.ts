@@ -1,28 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { MovieLanguagesDto } from './dto/movie-languages.dto';
+import { MovieAwardsDto } from './dto/movie-awards.dto';
 
 @Injectable()
-export class MovieLanguagesService {
+export class MovieAwardsService {
   constructor(private prisma: PrismaService) {}
 
-  async createlanguageService(dto: MovieLanguagesDto) {
+  async createMovieAwards(dto: MovieAwardsDto) {
     try {
-      const data = await this.prisma.movie_languages_v1.create({
+      const createdata = await this.prisma.movie_awards_v1.create({
         data: dto,
       });
-      return { data: data, err: null };
+      return { data: createdata, err: null };
     } catch (err) {
       console.log(err);
       return { data: null, err: err };
     }
   }
 
-  async updatelanguageService(dto: MovieLanguagesDto, movieLanguageId: number) {
+  async updateMovieAwards(dto: MovieAwardsDto, movieAwardId: number) {
     try {
-      const updatedata = await this.prisma.movie_languages_v1.update({
+      const updatedata = await this.prisma.movie_awards_v1.update({
         where: {
-          movie_lang_id: movieLanguageId,
+          movie_award_id: movieAwardId,
         },
         data: dto,
       });
@@ -33,11 +33,11 @@ export class MovieLanguagesService {
     }
   }
 
-  async getOnelanguageService(movieLangId: number) {
+  async getOnemovieAward(movieAwardId: number) {
     try {
-      const data = await this.prisma.movie_languages_v1.findFirst({
+      const data = await this.prisma.movie_awards_v1.findFirst({
         where: {
-          movie_lang_id: movieLangId,
+         movie_award_id:movieAwardId
         },
       });
       return { data: data, err: null };
@@ -46,12 +46,14 @@ export class MovieLanguagesService {
     }
   }
 
-  async getAllLanguageService() {
+  async getAllMovieAwards() {
     try {
-      const data = await this.prisma.movie_languages_v1.findMany();
+      const data = await this.prisma.movie_awards_v1.findMany();
       return { data: data, err: null };
     } catch (err) {
       return { data: null, err: err };
     }
   }
+
+
 }

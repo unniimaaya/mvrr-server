@@ -1,3 +1,4 @@
+import { status_types } from '@prisma/client';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class LanguageDto {
@@ -13,4 +14,6 @@ export class LanguageDto {
   language_updated_at: Date;
 
   language_updated_by: number;
+  language_status:status_types
+
 }

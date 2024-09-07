@@ -21,6 +21,8 @@ model users_v1 {
   user_token                                                            String?              @db.VarChar(255)
   user_created_at                                                       DateTime             @db.Timestamp(6)
   user_updated_at                                                       DateTime             @db.Timestamp(6)
+  movie_casts_v1_movie_casts_v1_movie_cast_created_byTousers_v1         movie_casts_v1[]     @relation("movie_casts_v1_movie_cast_created_byTousers_v1")
+  movie_casts_v1_movie_casts_v1_movie_cast_updated_byTousers_v1         movie_casts_v1[]     @relation("movie_casts_v1_movie_cast_updated_byTousers_v1")
   movie_languages_v1_movie_languages_v1_movie_lang_created_byTousers_v1 movie_languages_v1[] @relation("movie_languages_v1_movie_lang_created_byTousers_v1")
   movie_languages_v1_movie_languages_v1_movie_lang_updated_byTousers_v1 movie_languages_v1[] @relation("movie_languages_v1_movie_lang_updated_byTousers_v1")
 }
@@ -40,28 +42,23 @@ model movies_v1 {
   movie_created_by   Int
   movie_updated_by   Int
   movie_status       status_types?
+  movie_casts_v1     movie_casts_v1[]
   movie_languages_v1 movie_languages_v1[]
 }
 
 model movie_casts_v1 {
-  movie_cast_id         Int           @id(map: "movie_casts_v1_pkey1") @default(autoincrement())
-  movie_cast_cast_id    Int?
-  movie_cast_movie_id   Int?
-  movie_cast_created_at DateTime?     @db.Timestamp(6)
-  movie_cast_updated_at DateTime?     @db.Timestamp(6)
-  movie_cast_created_by Int?
-  movie_cast_updated_by Int?
-  movie_cast_status     status_types? @default(ACTIVE)
-}
-
-model movie_genre_v1 {
-  genre_id         Int           @id(map: "genre_v1_pkey") @default(autoincrement())
-  genre_name       String?       @db.VarChar(100)
-  genre_created_at DateTime      @db.Timestamp(6)
-  genre_updated_at DateTime      @db.Timestamp(6)
-  genre_created_by Int
-  genre_updated_by Int
-  genre_status     status_types?
+  movie_cast_id                                           Int           @id(map: "movie_casts_v1_pkey1") @default(autoincrement())
+  movie_cast_cast_id                                      Int?
+  movie_cast_movie_id                                     Int?
+  movie_cast_created_at                                   DateTime?     @db.Timestamp(6)
+  movie_cast_updated_at                                   DateTime?     @db.Timestamp(6)
+  movie_cast_created_by                                   Int?
+  movie_cast_updated_by                                   Int?
+  movie_cast_status                                       status_types? @default(ACTIVE)
+  casts_v1                                                casts_v1?     @relation(fields: [movie_cast_cast_id], references: [cast_id], onDelete: NoAction, onUpdate: NoAction)
+  users_v1_movie_casts_v1_movie_cast_created_byTousers_v1 users_v1?     @relation("movie_casts_v1_movie_cast_created_byTousers_v1", fields: [movie_cast_created_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  movies_v1                                               movies_v1?    @relation(fields: [movie_cast_movie_id], references: [movie_id], onDelete: NoAction, onUpdate: NoAction)
+  users_v1_movie_casts_v1_movie_cast_updated_byTousers_v1 users_v1?     @relation("movie_casts_v1_movie_cast_updated_byTousers_v1", fields: [movie_cast_updated_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model movie_languages_v1 {
@@ -113,17 +110,18 @@ model cast_awards_v1 {
 }
 
 model casts_v1 {
-  cast_id         Int           @id(map: "movie_casts_v1_pkey") @default(autoincrement())
-  cast_name       String?       @db.VarChar(50)
+  cast_id         Int              @id(map: "movie_casts_v1_pkey") @default(autoincrement())
+  cast_name       String?          @db.VarChar(50)
   cast_age        Int?
-  cast_about      String?       @db.VarChar(500)
-  cast_created_at DateTime      @db.Timestamp(6)
+  cast_about      String?          @db.VarChar(500)
+  cast_created_at DateTime         @db.Timestamp(6)
   cast_created_by Int
-  cast_updated_at DateTime      @db.Timestamp(6)
+  cast_updated_at DateTime         @db.Timestamp(6)
   cast_updated_by Int
   cast_status     status_types?
-  cast_website    String?       @db.VarChar(255)
-  cast_image      String?       @db.VarChar(255)
+  cast_website    String?          @db.VarChar(255)
+  cast_image      String?          @db.VarChar(255)
+  movie_casts_v1  movie_casts_v1[]
 }
 
 model directors_v1 {
@@ -140,7 +138,7 @@ model directors_v1 {
 }
 
 model honours_v1 {
-  honour_id         Int           @id(map: "cast_honours_v1_pkey")
+  honour_id         Int           @id(map: "cast_honours_v1_pkey") @default(autoincrement())
   honour_name       String?       @db.VarChar(100)
   honour_created_by Int?
   honour_updated_by Int?
@@ -158,6 +156,38 @@ model languages_v1 {
   language_created_by Int
   language_status     status_types?
   movie_languages_v1  movie_languages_v1[]
+}
+
+model movie_awards_v1 {
+  movie_award_id         Int           @id @default(autoincrement())
+  movie_award_award_id   Int?
+  movie_award_movie_id   Int?
+  movie_award_created_at DateTime?     @db.Timestamp(6)
+  movie_award_updated_at DateTime?     @db.Timestamp(6)
+  movie_award_created_by Int?
+  movie_award_updated_by Int?
+  movie_award_status     status_types?
+}
+
+model genre_v1 {
+  genre_id         Int           @id @default(autoincrement())
+  genre_name       String?       @db.VarChar(100)
+  genre_created_at DateTime      @db.Timestamp(6)
+  genre_updated_at DateTime      @db.Timestamp(6)
+  genre_created_by Int
+  genre_updated_by Int
+  genre_status     status_types?
+}
+
+model movie_genre_v1 {
+  movie_genre_id         Int           @id @default(autoincrement())
+  movie_genre_genre_id   Int?
+  movie_genre_movie_id   Int?
+  movie_genre_created_at DateTime?     @db.Timestamp(6)
+  movie_genre_updated_at DateTime?     @db.Timestamp(6)
+  movie_genre_created_by Int?
+  movie_genre_updated_by Int?
+  movie_genre_status     status_types?
 }
 
 enum status_types {
